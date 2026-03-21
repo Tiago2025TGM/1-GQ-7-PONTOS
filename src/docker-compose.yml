@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  bookshelf:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BACK4APP_APP_ID: ${NEXT_PUBLIC_BACK4APP_APP_ID}
+        NEXT_PUBLIC_BACK4APP_JS_KEY: ${NEXT_PUBLIC_BACK4APP_JS_KEY}
+        NEXT_PUBLIC_BACK4APP_SERVER_URL: ${NEXT_PUBLIC_BACK4APP_SERVER_URL:-https://parseapi.back4app.com}
+        NEXT_PUBLIC_MAILBOXLAYER_KEY: ${NEXT_PUBLIC_MAILBOXLAYER_KEY}
+    image: bookshelf:latest
+    container_name: bookshelf_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_BACK4APP_APP_ID=${NEXT_PUBLIC_BACK4APP_APP_ID}
+      - NEXT_PUBLIC_BACK4APP_JS_KEY=${NEXT_PUBLIC_BACK4APP_JS_KEY}
+      - NEXT_PUBLIC_BACK4APP_SERVER_URL=${NEXT_PUBLIC_BACK4APP_SERVER_URL:-https://parseapi.back4app.com}
+      - NEXT_PUBLIC_MAILBOXLAYER_KEY=${NEXT_PUBLIC_MAILBOXLAYER_KEY}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Opcional: nginx reverse proxy
+  # nginx:
+  #   image: nginx:alpine
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/conf.d/default.conf
+  #   depends_on:
+  #     - bookshelf
