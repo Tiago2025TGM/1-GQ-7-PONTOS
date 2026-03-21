@@ -1,0 +1,55 @@
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.cover {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.content {
+  padding: 16px;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.author {
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.genre {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+}
+
+.stars {
+  color: #ffd700;
+  margin-bottom: 8px;
+}
+
+.rating {
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}

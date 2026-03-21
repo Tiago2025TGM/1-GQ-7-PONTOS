@@ -1,0 +1,24 @@
+.stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.stat {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  flex: 1;
+}
+
+.number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #0070f3;
+}
+
+.label {
+  color: #666;
+  font-size: 0.9rem;
+}
