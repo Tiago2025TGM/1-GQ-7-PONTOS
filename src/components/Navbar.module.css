@@ -1,42 +1,140 @@
 .navbar {
-  background: #333;
-  color: white;
-  padding: 16px;
+  background: var(--ink);
+  color: var(--text-on-dark);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 2px 12px rgba(26, 18, 8, 0.25);
+}
+
+.inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 60px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 24px;
+}
+
+/* ── Brand ───────────────────────────────── */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.35rem;
+  line-height: 1;
 }
 
-.userInfo {
+.brandName {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+}
+
+/* ── Nav Links ───────────────────────────── */
+.navLinks {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 4px;
+  flex: 1;
+}
+
+.navLink {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(245, 240, 232, 0.7);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), color var(--transition);
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  background: rgba(201, 168, 76, 0.12);
+  color: var(--gold-light);
+}
+
+.navLink.active {
+  background: rgba(201, 168, 76, 0.18);
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* ── Right Side ──────────────────────────── */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.userChip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: #555;
+  background: var(--gold);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-.logoutButton {
-  background: #d9534f;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+.userName {
+  font-size: 0.875rem;
+  color: var(--parchment);
+  font-weight: 500;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logoutBtn {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(245, 240, 232, 0.65);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(201, 168, 76, 0.25);
   cursor: pointer;
+  background: transparent;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
 }
 
-.logoutButton:hover {
-  background: #c9302c;
+.logoutBtn:hover {
+  background: rgba(160, 82, 45, 0.25);
+  color: #f4a07a;
+  border-color: rgba(160, 82, 45, 0.4);
+}
+
+@media (max-width: 640px) {
+  .userName {
+    display: none;
+  }
+
+  .navLink {
+    font-size: 0.8rem;
+    padding: 5px 8px;
+  }
+
+  .inner {
+    gap: 12px;
+    padding: 0 16px;
+  }
 }

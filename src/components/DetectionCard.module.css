@@ -1,0 +1,156 @@
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), transform var(--transition);
+  opacity: 0;
+  animation-fill-mode: forwards;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ── Header ─────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.flag {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.langInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.langName {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.langCode {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+/* ── Reliability Badge ───────────────────── */
+.reliabilityBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.high {
+  background: rgba(107, 124, 90, 0.15);
+  color: var(--sage);
+}
+
+.medium {
+  background: rgba(201, 168, 76, 0.15);
+  color: var(--gold);
+}
+
+.low {
+  background: rgba(160, 82, 45, 0.12);
+  color: var(--rust);
+}
+
+/* ── Text Preview ────────────────────────── */
+.textPreview {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  padding: 10px 12px;
+  background: var(--parchment);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-style: italic;
+}
+
+/* ── Note ────────────────────────────────── */
+.note {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.noteIcon {
+  flex-shrink: 0;
+}
+
+/* ── Footer ──────────────────────────────── */
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.reliable {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--sage);
+  background: rgba(107, 124, 90, 0.12);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.actions {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+
+.editBtn,
+.deleteBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-warm);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.editBtn:hover {
+  background: var(--gold-pale);
+  border-color: var(--gold);
+}
+
+.deleteBtn:hover {
+  background: rgba(160, 82, 45, 0.1);
+  border-color: var(--rust);
+}
