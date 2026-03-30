@@ -1,4 +1,4 @@
-import Parse from "parse/react-native.js";
+import Parse from "parse/dist/parse.js";
 
 const APP_ID = process.env.NEXT_PUBLIC_BACK4APP_APP_ID || "";
 const JS_KEY = process.env.NEXT_PUBLIC_BACK4APP_JS_KEY || "";

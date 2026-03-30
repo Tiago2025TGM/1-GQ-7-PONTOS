@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(npx plugins:*)"
+      "Bash(npx plugins:*)",
+      "Bash(python3 -c \"import sys,json; p=json.load\\(sys.stdin\\); print\\(''''main:'''', p.get\\(''''main''''\\)\\); print\\(''''browser:'''', p.get\\(''''browser''''\\)\\); print\\(''''module:'''', p.get\\(''''module''''\\)\\); print\\(''''exports:'''', json.dumps\\(p.get\\(''''exports'''',{}\\), indent=2\\)[:800]\\)\")",
+      "Bash(node -e \"const p=require\\(''./node_modules/parse/package.json''\\); console.log\\(''main:'',p.main\\); console.log\\(''browser:'',JSON.stringify\\(p.browser\\)\\); console.log\\(''module:'',p.module\\);\")",
+      "Bash(node:*)",
+      "Bash(npm run:*)"
     ]
   }
 }
