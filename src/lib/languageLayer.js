@@ -1,94 +1,81 @@
 /**
- * Detecta o idioma de um texto usando a API LanguageLayer.
- * Documentação: https://languagelayer.com/documentation
+ * Detecta o idioma de um texto via rota interna Next.js,
+ * que por sua vez chama a API LanguageLayer server-side (evita CORS).
  */
 export async function detectLanguage(text) {
-  const apiKey = process.env.NEXT_PUBLIC_LANGUAGELAYER_KEY;
-
-  if (!apiKey || apiKey === "SUA_LANGUAGELAYER_KEY_AQUI") {
-    console.warn("[LanguageLayer] API Key não configurada. Usando detecção básica.");
-    return basicDetection(text);
+  if (!text?.trim()) {
+    return { success: false, message: "Texto vazio." };
   }
 
   try {
-    const url = `https://apilayer.net/api/detect?access_key=${apiKey}&query=${encodeURIComponent(text)}`;
-    const res = await fetch(url, { cache: "no-store" });
-
-    if (!res.ok) {
-      console.error("[LanguageLayer] HTTP Error:", res.status);
-      return basicDetection(text);
-    }
+    const res = await fetch("/api/detect-language", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: text.trim() }),
+    });
 
     const data = await res.json();
 
-    if (!data.success) {
-      console.warn("[LanguageLayer] API Error:", data.error);
+    // If API key is missing/invalid, server returns fallback:true — run client fallback
+    if (!data.success && data.fallback) {
       return basicDetection(text);
     }
 
-    const top = data.results?.[0];
-    if (!top) {
-      return { success: false, message: "Nenhum resultado encontrado." };
-    }
-
-    return {
-      success: true,
-      languageCode: top.language_code,
-      languageName: top.language_name,
-      reliability: top.percentage,
-      isReliable: top.is_reliable,
-      allResults: data.results,
-      message: `Idioma detectado: ${top.language_name} (${top.percentage}%)`,
-    };
+    return data;
   } catch (err) {
-    console.error("[LanguageLayer] Erro de rede:", err);
+    console.error("[LanguageLayer] Erro ao chamar rota interna:", err);
     return basicDetection(text);
   }
 }
 
-/** Fallback quando a API não está disponível */
+/** Fallback por trigrama/palavra-chave quando a API não está disponível */
 function basicDetection(text) {
   const lower = text.toLowerCase();
 
   const patterns = [
-    { code: "pt", name: "Portuguese", regex: /\b(de|da|do|em|para|com|uma|que|não|está|são|mas|por)\b/ },
-    { code: "en", name: "English", regex: /\b(the|and|for|are|but|not|you|all|can|with|this|have)\b/ },
-    { code: "es", name: "Spanish", regex: /\b(que|de|en|el|la|los|las|una|por|con|para|más|pero)\b/ },
-    { code: "fr", name: "French", regex: /\b(le|la|les|de|du|des|un|une|et|en|pour|dans|sur|que)\b/ },
-    { code: "de", name: "German", regex: /\b(der|die|das|ein|und|für|mit|auf|ist|ich|sie|von|nicht)\b/ },
-    { code: "it", name: "Italian", regex: /\b(il|la|le|di|un|una|per|con|che|non|del|della|sono)\b/ },
+    { code: "pt", name: "Portuguese", words: ["de","da","do","em","para","com","uma","que","não","está","são","mas","por","isso","ser","ele","ela","nos","foi","como","mais"] },
+    { code: "en", name: "English",    words: ["the","and","for","are","but","not","you","all","can","with","this","have","from","they","been","will","your","was","his","her"] },
+    { code: "es", name: "Spanish",    words: ["que","de","en","el","la","los","las","una","por","con","para","más","pero","como","este","muy","sus","todo","también","cuando"] },
+    { code: "fr", name: "French",     words: ["le","la","les","de","du","des","un","une","et","en","pour","dans","sur","que","est","avec","son","pas","qui","plus"] },
+    { code: "de", name: "German",     words: ["der","die","das","ein","und","für","mit","auf","ist","ich","sie","von","nicht","des","dem","eine","auch","sich","an","er"] },
+    { code: "it", name: "Italian",    words: ["il","la","le","di","un","una","per","con","che","non","del","della","sono","nel","una","si","ma","ho","lo","ci"] },
+    { code: "nl", name: "Dutch",      words: ["de","het","een","van","is","op","te","en","dat","in","zijn","voor","met","aan","er","heeft","niet","ook","hij","ze"] },
+    { code: "pl", name: "Polish",     words: ["i","w","na","do","z","się","to","że","jest","jak","nie","ale","tak","co","przez","po","czy","już","go","jego"] },
+    { code: "ru", name: "Russian",    words: ["и","в","на","не","это","с","а","он","как","что","по","из","его","за","но","у","от","же","вс","так"] },
   ];
+
+  const tokens = lower.match(/\b\w+\b/g) || [];
+  const tokenSet = new Set(tokens);
 
   let best = null;
   let bestScore = 0;
 
   for (const p of patterns) {
-    const matches = (lower.match(new RegExp(p.regex.source, "gi")) || []).length;
-    if (matches > bestScore) {
-      bestScore = matches;
+    const score = p.words.filter(w => tokenSet.has(w)).length;
+    if (score > bestScore) {
+      bestScore = score;
       best = p;
     }
   }
 
-  if (best && bestScore > 0) {
+  if (best && bestScore >= 1) {
+    const reliability = Math.min(98, 40 + bestScore * 6);
     return {
       success: true,
       languageCode: best.code,
       languageName: best.name,
-      reliability: Math.min(95, bestScore * 15),
+      reliability,
       isReliable: bestScore >= 3,
-      allResults: [{ language_code: best.code, language_name: best.name, percentage: Math.min(95, bestScore * 15), is_reliable: bestScore >= 3 }],
-      message: `Idioma detectado (básico): ${best.name}`,
+      message: `Idioma detectado: ${best.name} (${reliability}%)`,
     };
   }
 
   return {
     success: false,
     languageCode: "und",
-    languageName: "Unknown",
+    languageName: "Desconhecido",
     reliability: 0,
     isReliable: false,
-    allResults: [],
-    message: "Não foi possível detectar o idioma.",
+    message: "Não foi possível detectar o idioma. Tente um texto mais longo.",
   };
 }
